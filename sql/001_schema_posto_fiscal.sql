@@ -2,7 +2,7 @@
 -- Idempotente: so cria o que nao existe; nunca altera nem apaga nada de outros schemas.
 -- Regras (ENERDATA/metricas.md seção 4): banco unico, 1 schema por app, so tabelas NOVAS no proprio schema,
 -- nada de alterar ou apagar o que existe em outros schemas. As tres tabelas de metrica seguem o padrao comum.
--- Seguranca proposta: RLS ligado sem politicas (so a chave de servico do app escreve e le); login do app a definir.
+-- Seguranca: login pelo Authentication do Supabase; RLS libera so os e-mails da tabela posto_fiscal.acesso.
 
 create schema if not exists posto_fiscal;
 
@@ -91,7 +91,7 @@ create table if not exists posto_fiscal.metrica_registro (
   detalhe          text,
   atualizado_em    timestamptz not null default now(),
   atualizado_por   text,
-  unique (item_id, periodo, empresa, obra, un)
+  unique nulls not distinct (item_id, periodo, empresa, obra, un)
 );
 create table if not exists posto_fiscal.metrica_ocorrencia (
   id            bigserial primary key,
