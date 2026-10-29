@@ -1,0 +1,43 @@
+# Diagnostico SOMENTE LEITURA do Sienge para o Posto-Fiscal (acionado a mao).
+# Repositorio PUBLICO: o log tambem e publico. O script imprime so contagens e codigos.
+name: Diagnostico Sienge (somente leitura)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ids:
+        description: 'Numeros de titulo da planilha, separados por virgula'
+        required: false
+        default: '38338,38339,38340,38341,38342,38343,38344,38345,38346,38350,38351,38352,38353,38354,38355,38356,38357,38358,38359,38360,38361,38362,38364,38365,38369,38370,38371,38372,38373,38374,38376,38377,38378,38385,38386,38387,38388,38389,38391,38393,38395,38396,38397,38398'
+      dias:
+        description: 'Janela da varredura em dias para tras (60 = set-out/2026)'
+        required: false
+        default: '60'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Baixar o repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Rodar o diagnostico (so leitura)
+        env:
+          SIENGE_BASE_URL: ${{ secrets.SIENGE_BASE_URL }}
+          SIENGE_USER: ${{ secrets.SIENGE_USER }}
+          SIENGE_PASSWORD: ${{ secrets.SIENGE_PASSWORD }}
+          IDS: ${{ github.event.inputs.ids }}
+          DIAS: ${{ github.event.inputs.dias }}
+        run: python scripts/diagnostico_sienge_titulos.py
