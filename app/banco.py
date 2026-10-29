@@ -7,7 +7,7 @@ Variaveis: SUPABASE_URL, SUPABASE_ANON_KEY (Secrets do Streamlit).
 """
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Optional
 
 SCHEMA = "posto_fiscal"
@@ -39,14 +39,14 @@ def linhas_titulo(titulos: list, carga_id: Optional[int] = None) -> tuple:
             "valor_liquido": t.valor_liquido, "emissao": _iso(t.emissao), "vencimento": _iso(t.vencimento),
             "lancamento": _iso(t.lancamento), "reprogramado": _iso(t.reprogramado), "pc_ct": t.pc_ct,
             "tipo_despesa": t.tipo_despesa, "ret_conferidas": t.ret_conferidas, "devolvida": t.devolvida,
-            "obs": t.obs, "atualizado_em": datetime.utcnow().isoformat(),
+            "obs": t.obs, "atualizado_em": datetime.now(timezone.utc).isoformat(),
         }
     return list(por_ref.values()), fora
 
 
 def linha_sienge(titulo_ref: str, s, avisos: list) -> dict:
     return {
-        "titulo_ref": titulo_ref, "consultado_em": datetime.utcnow().isoformat(), "http": s.http,
+        "titulo_ref": titulo_ref, "consultado_em": datetime.now(timezone.utc).isoformat(), "http": s.http,
         "encontrado": s.encontrado, "tipo": s.tipo, "emissao": _iso(s.emissao), "cadastro": _iso(s.cadastro),
         "num_doc": s.num_doc, "cnpj_cpf": s.cnpj_cpf, "valor_total": s.valor_total,
         "tem_contrato": s.tem_contrato, "tem_medicao": s.tem_medicao, "tem_pedido": s.tem_pedido,

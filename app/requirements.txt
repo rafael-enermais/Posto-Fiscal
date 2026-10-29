@@ -1,6 +1,7 @@
-# Dependencias do app Streamlit (o Streamlit Cloud le este arquivo por estar na pasta do app; o workflow de diagnostico usa so o requirements.txt da raiz)
-streamlit==1.39.0
-pandas==2.2.3
-openpyxl==3.1.5
-requests==2.32.3
-supabase==2.9.1
+# Dependencias do app Streamlit (o Streamlit Cloud le este arquivo por estar na pasta do app; o workflow de diagnostico usa so o requirements.txt da raiz).
+# SEM versoes fixas de proposito: o Streamlit Cloud usa Python 3.14 e as versoes antigas (pillow 10, pandas 2.2) nao tem pacote pronto para ele e falham ao compilar (erro de 29/10/2026).
+streamlit
+pandas
+openpyxl
+requests
+supabase
