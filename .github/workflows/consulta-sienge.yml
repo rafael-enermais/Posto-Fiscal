@@ -1,0 +1,46 @@
+# Consulta SOMENTE LEITURA ao Sienge por numero de documento (acionada a mao).
+# Repositorio PUBLICO: o log tambem e publico. O script imprime so ids, tipos, datas e status.
+name: Consulta Sienge por numero (somente leitura)
+
+on:
+  workflow_dispatch:
+    inputs:
+      numero:
+        description: 'Numero do documento (ex.: 245)'
+        required: true
+      tipo:
+        description: 'Tipo do documento (opcional, ex.: PRO)'
+        required: false
+        default: ''
+      dias:
+        description: 'Janela da varredura em dias para tras'
+        required: false
+        default: '60'
+      vizinhos:
+        description: 'Faixa de ids de titulo para listar (opcional, ex.: 38385-38395)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  consulta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Consultar (so leitura)
+        env:
+          SIENGE_BASE_URL: ${{ secrets.SIENGE_BASE_URL }}
+          SIENGE_USER: ${{ secrets.SIENGE_USER }}
+          SIENGE_PASSWORD: ${{ secrets.SIENGE_PASSWORD }}
+          NUMERO: ${{ github.event.inputs.numero }}
+          TIPO: ${{ github.event.inputs.tipo }}
+          DIAS: ${{ github.event.inputs.dias }}
+          VIZINHOS: ${{ github.event.inputs.vizinhos }}
+        run: python scripts/consulta_sienge_por_numero.py
